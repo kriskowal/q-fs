@@ -1,7 +1,7 @@
 {
     "name": "q-fs",
     "description": "Q Promise wrappers for Node's files system.",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "homepage": "http://github.com/kriskowal/q-fs/",
     "author": "Kris Kowal <kris@cixar.com> (http://github.com/kriskowal/)",
     "bugs": {
@@ -16,9 +16,9 @@
     ],
     "main": "lib/q-fs.js",
     "dependencies": {
-        "n-util": ">=0.0.0",
+        "n-util": ">=0.0.1",
         "q": ">=0.0.3",
-        "q-io": ">=0.0.0",
+        "q-io": ">=0.0.1",
         "fs-boot": ">=0.0.0"
     },
     "repository": {
