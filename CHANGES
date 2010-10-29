@@ -1,0 +1,7 @@
+
+ 
+0.0.1
+
+ - replaced util with n-util in response to Node
+   module name conflict
+ - restructured for overlay style package compatibility
