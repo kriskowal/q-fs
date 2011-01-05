@@ -1,4 +1,8 @@
 
+0.0.4
+
+ - Added FS.list(path)
+
 0.0.3
 
  - synced dependencies
