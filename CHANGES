@@ -1,4 +1,7 @@
 
+0.0.8
+ - reved up Q to version 0.2 so duck-promises would work.
+
 0.0.7
  - minor bugfix in the common refactor
 
