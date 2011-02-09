@@ -1,4 +1,9 @@
 
+0.0.6
+ - factored out common, engine agnostic components in
+   anticipation of using them in a mock filesystem.
+ - added "b" buffered mode to file open.
+
 0.0.5
  - Added
    - listTree
