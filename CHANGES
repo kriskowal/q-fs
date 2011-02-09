@@ -1,4 +1,7 @@
 
+0.0.7
+ - minor bugfix in the common refactor
+
 0.0.6
  - factored out common, engine agnostic components in
    anticipation of using them in a mock filesystem.
