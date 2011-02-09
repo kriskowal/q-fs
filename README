@@ -1,8 +1,77 @@
 
 File system API for
-Q when/defer-style promise
+Q when/defer-style promises
 
-Very minimal in 0.0.0
+
+THE API
+-------
+
+open(path, options)
+
+read(path, options)
+
+write(path, options)
+
+append(path, options)
+
+list(path)
+
+listTree(path)
+
+stat(path)
+
+isFile(path)
+
+isDirectory(path)
+
+lastModified(path)
+
+split(path)
+
+join(paths)
+join(...paths)
+
+resolve(...paths)
+
+normal(...paths)
+
+absolute(path)
+
+canonical(path)
+
+contains(parent, child)
+
+relative(source, target)
+
+isAbsolute(path)
+
+isRelative(path)
+
+isRoot(path)
+
+root(path)
+
+directory(path)
+
+base(path, extension)
+
+extension(path)
+
+ROOT
+
+    `/` on Unix
+    `\` on Windows
+
+SEPARATOR
+
+    `/` on Unix
+    `\` on Windows
+
+ALT_SEPARATOR
+
+    undefined on Unix
+    `/` on Windows
+
 
 Copyright 2009, 2010 Kristopher Michael Kowal
 MIT License (enclosed)
