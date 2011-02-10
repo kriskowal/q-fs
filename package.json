@@ -16,7 +16,8 @@
     ],
     "main": "./lib/q-fs.js",
     "modules": {
-        "common": "./lib/common.js"
+        "common": "./lib/common.js",
+        "mock": "./lib/mock.js"
     },
     "dependencies": {
         "n-util": ">=0.0.1",
