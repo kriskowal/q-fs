@@ -1,4 +1,9 @@
 
+0.0.14
+ - Moved "q-fs/common" from "q-fs/common-fs".
+ - Added "q-fs/mock" for mock file systems, particularly for
+   making mock file systems from zip file extracts.
+
 0.0.9
  - fixed a bug in the listTree due to a Q module mismatch.
 
