@@ -1,7 +1,7 @@
 {
     "name": "q-fs",
     "description": "Q Promise wrappers for Node's files system.",
-    "version": "0.0.9",
+    "version": "0.0.10",
     "homepage": "http://github.com/kriskowal/q-fs/",
     "author": "Kris Kowal <kris@cixar.com> (http://github.com/kriskowal/)",
     "bugs": {
@@ -14,7 +14,10 @@
             "url": "http://github.com/kriskowal/q-fs/raw/master/LICENSE"
         }
     ],
-    "main": "lib/q-fs.js",
+    "main": "./lib/q-fs.js",
+    "modules": {
+        "common-fs": "./lib/common.js"
+    },
     "dependencies": {
         "n-util": ">=0.0.1",
         "q": ">=0.2.8",
