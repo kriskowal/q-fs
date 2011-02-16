@@ -1,4 +1,19 @@
 
+DEPRECATED
+ - relative will not be available in the next backward
+   incompatible release.  Use relativeFromFile for the same
+   behavior.  The change distinguishes the named behavior
+   from relativeFromDirectory.  relative may be reintroduced
+   in a later version, but it will perform a stat on the
+   path first and branch to either of the explicit forms.
+
+0.0.15
+ - Added "q-fs/root" for creating an attenuated file system
+   API object for a subdirectory of another file system API
+   object
+ - Added relativeFromDirectory and relativeFromFile to distinguish
+   the two cases explicitly.  relative is depre
+
 0.0.14
  - Moved "q-fs/common" from "q-fs/common-fs".
  - Added "q-fs/mock" for mock file systems, particularly for

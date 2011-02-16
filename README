@@ -42,6 +42,8 @@ canonical(path)
 contains(parent, child)
 
 relative(source, target)
+relativeFromFile(source, target)
+relativeFromDirectory(source, target)
 
 isAbsolute(path)
 
