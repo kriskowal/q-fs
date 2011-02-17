@@ -7,6 +7,16 @@ DEPRECATED
    in a later version, but it will perform a stat on the
    path first and branch to either of the explicit forms.
 
+0.0.16:
+ - Fixed a minor bug in distinguishing directories from
+   other files in mocked file systems.
+ - Generalized the mock.reroot method so that it can be used
+   on any file system object.
+ - Fixed a bug in contains that applied when the source
+   directory was the root directory.
+ - Improved handling of the root directory in mock
+   file-systems.
+
 0.0.15
  - Added "q-fs/root" for creating an attenuated file system
    API object for a subdirectory of another file system API
