@@ -7,6 +7,12 @@ DEPRECATED
    in a later version, but it will perform a stat on the
    path first and branch to either of the explicit forms.
 
+Next minor release:
+ - Added mock.read(fs, path), mock.merge(fss) for reading
+   file systems into a read-only mock, and for merging
+   file system layer objects into a single file system,
+   like a tar copy.
+
 0.0.16:
  - Fixed a minor bug in distinguishing directories from
    other files in mocked file systems.
