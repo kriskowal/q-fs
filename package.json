@@ -21,7 +21,6 @@
         "root": "./lib/root.js"
     },
     "dependencies": {
-        "n-util": ">=0.0.1",
         "q": ">=0.2.8",
         "q-io": ">=0.0.3",
         "fs-boot": ">=0.0.3"
