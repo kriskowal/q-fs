@@ -12,7 +12,10 @@ Next minor release:
    file systems into a read-only mock, and for merging
    file system layer objects into a single file system,
    like a tar copy.
- - Added fs.toObject()
+ - Added `toObject()`
+ - Added `remove`, `statLink`, `statFd`, `link`, `chown`,
+   `chmod`, `append`, `listDirectoryTree`, `makeTree`,
+   `removeTree`.
 
 0.0.16:
  - Fixed a minor bug in distinguishing directories from

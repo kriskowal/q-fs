@@ -6,19 +6,47 @@ Q when/defer-style promises
 THE API
 -------
 
-open(path, options)
+open(path, flags, charset)
 
-read(path, options)
+read(path, flags, charset)
 
-write(path, options)
+write(path, content, flags, charset)
 
-append(path, options)
+append(path, content, flags, charset) NOT TESTED
+
+copy(source, target) NOT IMPLEMENTED
 
 list(path)
 
-listTree(path)
+listTree(path, guard_opt(path, stat))
+
+listDirectoryTree(path)
+
+glob(pattern) NOT IMPLEMENTED
+
+match(pattern, file) NOT IMPLEMENTED
+
+makeDirectory(path)
+
+makeTree(path) NOT TESTED
+
+remove(path) NOT TESTED
+
+removeTree(path) NOT TESTED
+
+link(source, taget) NOT TESTED (probably safe)
+
+chown(path, uid, gid) NOT TESTED (probably safe)
+
+chmod(path, mode) NOT TESTED (probably safe)
 
 stat(path)
+
+statLink(path) NOT TESTED
+
+statFd(fd) NOT TESTED
+
+exists(path)
 
 isFile(path)
 
@@ -41,8 +69,8 @@ canonical(path)
 
 contains(parent, child)
 
-relative(source, target)
 relativeFromFile(source, target)
+
 relativeFromDirectory(source, target)
 
 isAbsolute(path)
@@ -58,6 +86,10 @@ directory(path)
 base(path, extension)
 
 extension(path)
+
+reroot(path_opt)
+
+toObject(path_opt)
 
 ROOT
 
