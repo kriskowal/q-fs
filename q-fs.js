@@ -10,16 +10,20 @@
 
 var FS = require("fs"); // node
 var SYS = require("sys"); // node
-var Q = require("q/util");
+var Q = require("qq");
 var IO = require("q-io");
-var UTIL = require("n-util");
 var FS_BOOT = require("fs-boot");
-var COMMON = require("./q-fs/common");
+var COMMON = require("./lib/common");
+var MOCK = require("./lib/mock");
+var ROOT = require("./lib/root");
 
 for (var name in FS_BOOT)
     exports[name] = FS_BOOT[name];
 
 COMMON.update(exports, process.cwd);
+exports.Mock = MOCK.Fs;
+exports.mock = MOCK.mock;
+exports.Root = ROOT.Fs;
 
 /**
  * @param {String} path

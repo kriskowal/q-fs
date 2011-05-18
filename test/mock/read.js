@@ -1,17 +1,14 @@
 "use strict";
 
-var Q = require("q/util");
+var Q = require("qq");
 var FS = require("q-fs");
-var Root = require("q-fs/root").Fs;
-var MOCK = require("q-fs/mock");
+var Root = FS.Root;
+var Mock = FS.Mock;
 var ASSERT = require("assert");
-
-var Mock = MOCK.Fs;
-var read = MOCK.read;
 
 exports['test merge'] = function (ASSERT, done) {
 
-    var readed = read(FS, FS.join(__dirname, 'dummy'));
+    var readed = FS.mock(FS, FS.join(__dirname, 'dummy'));
 
     Q.when(readed, function (readed) {
         return Q.when(readed.listTree(), function (list) {

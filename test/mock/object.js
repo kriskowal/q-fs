@@ -2,8 +2,8 @@
 
 var Q = require("q/util");
 var FS = require("q-fs");
-var Root = require("q-fs/root").Fs;
-var MOCK = require("q-fs/mock");
+var Root = require("q-fs").Root;
+var Mock = require("q-fs").Mock;
 var ASSERT = require("assert");
 
 exports['test merge'] = function (ASSERT, done) {
@@ -12,7 +12,7 @@ exports['test merge'] = function (ASSERT, done) {
         "a": 10,
         "b": 20
     };
-    var output = MOCK.Fs(input).toObject();
+    var output = Mock(input).toObject();
     Q.when(output, function (output) {
         ASSERT.deepEqual(output, input, 'toObject');
     })

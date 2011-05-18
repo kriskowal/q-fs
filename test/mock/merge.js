@@ -1,17 +1,14 @@
 "use strict";
 
-var Q = require("q/util");
+var Q = require("qq");
 var FS = require("q-fs");
-var Root = require("q-fs/root").Fs;
-var MOCK = require("q-fs/mock");
+var Root = require("q-fs").Root;
+var Mock = require("q-fs").Mock;
 var ASSERT = require("assert");
-
-var Mock = MOCK.Fs;
-var merge = MOCK.merge;
 
 exports['test merge'] = function (ASSERT, done) {
 
-    var merged = merge([
+    var merged = FS.merge([
         Mock({
             "a": 10,
             "b": 20,

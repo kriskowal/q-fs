@@ -1,21 +1,23 @@
 
-DEPRECATED
- - relative will not be available in the next backward
-   incompatible release.  Use relativeFromFile for the same
-   behavior.  The change distinguishes the named behavior
-   from relativeFromDirectory.  relative may be reintroduced
-   in a later version, but it will perform a stat on the
-   path first and branch to either of the explicit forms.
-
-Next minor release:
- - Added mock.read(fs, path), mock.merge(fss) for reading
-   file systems into a read-only mock, and for merging
-   file system layer objects into a single file system,
-   like a tar copy.
- - Added `toObject()`
+0.1.0: BACKWARD INCOMPATIBLE*
+ - *`relative` is no longer available.  Use `relativeFromFile`
+   for the same behavior.  The change distinguishes the named
+   behavior from `relativeFromDirectory`.  `relative` may
+   be reintroduced in a future version, but it will perform a
+   `stat` on the path first and branch to either of the
+   explicit forms, bearing in mind that performance penalty.
+ - *NPM no longer supports packaged submodules.  Access
+   `Mock` and `Root` from `"q-fs"` instead of the `Fs` exports
+   of `"q-fs/*"`.
  - Added `remove`, `statLink`, `statFd`, `link`, `chown`,
    `chmod`, `append`, `listDirectoryTree`, `makeTree`,
    `removeTree`.
+ - Added `toObject(path_opt, charset_opt)` for reading a
+   file system into an in-memory object.
+ - Added `mock(fs, path)`, and `merge(fss)` for reading
+   file systems into a read-only mock, and for merging
+   file system layer objects into a single file system,
+   like a tar copy.
 
 0.0.16:
  - Fixed a minor bug in distinguishing directories from
