@@ -1,4 +1,9 @@
 
+0.1.1:
+ - Added lazy directory listings and stats.  You can call
+   Array and Stats methods on these promises and recieve
+   promises for the eventual resultion.
+
 0.1.0: BACKWARD INCOMPATIBLE*
  - *`relative` is no longer available.  Use `relativeFromFile`
    for the same behavior.  The change distinguishes the named

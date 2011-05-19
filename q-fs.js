@@ -73,7 +73,7 @@ exports.list = function (path) {
         else
             result.resolve(list);
     });
-    return result.promise;
+    return Q.Lazy(Array, result.promise);
 };
 
 /**
@@ -94,7 +94,7 @@ exports.stat = function (path) {
     } catch (error) {
         deferred.reject(error);
     }
-    return deferred.promise;
+    return Q.Lazy(FS.Stats, deferred.promise);
 };
 
 exports.statLink = function (path) {
