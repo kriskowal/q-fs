@@ -1,4 +1,9 @@
 
+0.1.2:
+ - Added the option to stop traversing subtrees with the
+   filter guard of listTree by returning "null" instead
+   of boolean.
+
 0.1.1:
  - Added lazy directory listings and stats.  You can call
    Array and Stats methods on these promises and recieve
