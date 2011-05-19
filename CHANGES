@@ -1,4 +1,8 @@
 
+0.1.3:
+ - Added the option for the listTree filter guard to
+   return a promise.
+
 0.1.2:
  - Added the option to stop traversing subtrees with the
    filter guard of listTree by returning "null" instead
