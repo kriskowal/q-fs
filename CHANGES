@@ -1,4 +1,25 @@
 
+0.1.4:
+ - Added `makeDirectory`.
+ - Added `relative` function, which stats the source
+   directory to determine whether to compute relative to a
+   directory or another kind of file.
+ - Added `symbolicLink` (which creates a symbolic link with
+   the given text) and `symbolicCopy` (which behaves like
+   `copyTree` except using a symbolic link as the mechanism
+   and automatically generates the link text using
+   `relative`.
+ - Wrapped `Stats` objects so they can be emulated in
+   browsers and be guaranteed to have the same API on both
+   sides.
+ - Changed the convention for storing modules in global
+   scope when executed as <scripts>
+ - Fixed a problem with silent errors in `listTree`
+   filter functions.
+ - Fixed the `makeTree` algorithm for relative directories.
+ - Moved the fs-boot API basics to lib/common so they can be
+   shared implicitly with other API's that use lib/common.
+
 0.1.3:
  - Added the option for the listTree filter guard to
    return a promise.

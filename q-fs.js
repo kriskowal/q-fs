@@ -12,18 +12,16 @@ var FS = require("fs"); // node
 var SYS = require("sys"); // node
 var Q = require("qq");
 var IO = require("q-io");
-var FS_BOOT = require("fs-boot");
 var COMMON = require("./lib/common");
 var MOCK = require("./lib/mock");
 var ROOT = require("./lib/root");
-
-for (var name in FS_BOOT)
-    exports[name] = FS_BOOT[name];
 
 COMMON.update(exports, process.cwd);
 exports.Mock = MOCK.Fs;
 exports.mock = MOCK.mock;
 exports.Root = ROOT.Fs;
+
+process.umask(0);
 
 /**
  * @param {String} path
@@ -62,6 +60,33 @@ exports.remove = function (path) {
     return done.promise;
 };
 
+exports.makeDirectory = function (path, mode) {
+    path = String(path);
+    var done = Q.defer();
+    mode = mode === undefined ? parseInt('755', 8) : mode;
+    FS.mkdir(path, mode, function (error) {
+        if (error) {
+            done.reject(error);
+        } else {
+            done.resolve();
+        }
+    });
+    return done.promise;
+};
+
+exports.removeDirectory = function (path) {
+    path = String(path);
+    var done = Q.defer();
+    FS.rmdir(path, function (error) {
+        if (error) {
+            done.reject(error);
+        } else {
+            done.resolve();
+        }
+    });
+    return done.promise;
+};
+
 /**
  */
 exports.list = function (path) {
@@ -88,13 +113,13 @@ exports.stat = function (path) {
             if (error) {
                 deferred.reject(error);
             } else {
-                deferred.resolve(stat);
+                deferred.resolve(new exports.Stats(stat));
             }
         });
     } catch (error) {
         deferred.reject(error);
     }
-    return Q.Lazy(FS.Stats, deferred.promise);
+    return Q.Lazy(exports.Stats, deferred.promise);
 };
 
 exports.statLink = function (path) {
@@ -147,6 +172,30 @@ exports.link = function (source, target) {
         deferred.reject(error);
     }
     return deferred.promise;
+};
+
+exports.symbolicLink = function (target, relative) {
+    target = String(target);
+    relative = String(relative);
+    var deferred = Q.defer();
+    try {
+        FS.symlink(relative, target, function (error) {
+            if (error) {
+                deferred.reject(error);
+            } else {
+                deferred.resolve();
+            }
+        });
+    } catch (error) {
+        deferred.reject(error);
+    }
+    return deferred.promise;
+};
+
+exports.symbolicCopy = function (source, target) {
+    return Q.when(exports.relative(target, source), function (relative) {
+        return exports.symbolicLink(target, relative);
+    });
 };
 
 exports.chown = function (path, uid, gid) {
