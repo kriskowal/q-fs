@@ -50,7 +50,8 @@ exports.remove = function (path) {
     var done = Q.defer();
     FS.unlink(path, function (error) {
         if (error) {
-            done.reject("Can't remove " + JSON.stringify(path) + ": " + error);
+            error.message = "Can't remove " + JSON.stringify(path) + ": " + error.message;
+            done.reject(error);
         } else {
             done.resolve();
         }
@@ -64,7 +65,8 @@ exports.makeDirectory = function (path, mode) {
     mode = mode === undefined ? parseInt('755', 8) : mode;
     FS.mkdir(path, mode, function (error) {
         if (error) {
-            done.reject("Can't makeDirectory " + JSON.stringify(path) + " with mode " + mode + ": " + error);
+            error.message = "Can't makeDirectory " + JSON.stringify(path) + " with mode " + mode + ": " + error.message;
+            done.reject(error);
         } else {
             done.resolve();
         }
@@ -77,7 +79,8 @@ exports.removeDirectory = function (path) {
     var done = Q.defer();
     FS.rmdir(path, function (error) {
         if (error) {
-            done.reject("Can't removeDirectory " + JSON.stringify(path) + ": " + error);
+            error.message = "Can't removeDirectory " + JSON.stringify(path) + ": " + error.message;
+            done.reject(error);
         } else {
             done.resolve();
         }
@@ -91,10 +94,12 @@ exports.list = function (path) {
     path = String(path);
     var result = Q.defer();
     FS.readdir(path, function (error, list) {
-        if (error)
-            return result.reject("Can't list " + JSON.stringify(path) + ": " + error);
-        else
+        if (error) {
+            error.message = "Can't list " + JSON.stringify(path) + ": " + error.message;
+            return result.reject(error);
+        } else {
             result.resolve(list);
+        }
     });
     return Q.Lazy(Array, result.promise);
 };
@@ -109,7 +114,8 @@ exports.stat = function (path) {
     try {
         FS.stat(path, function (error, stat) {
             if (error) {
-                done.reject("Can't stat " + JSON.stringify(path) + ": " + error);
+                error.message = "Can't stat " + JSON.stringify(path) + ": " + error;
+                done.reject(error);
             } else {
                 done.resolve(new exports.Stats(stat));
             }
@@ -126,7 +132,8 @@ exports.statLink = function (path) {
     try {
         FS.lstat(path, function (error, stat) {
             if (error) {
-                done.reject("Can't statLink " + JSON.stringify(path) + ": " + error);
+                error.message = "Can't statLink " + JSON.stringify(path) + ": " + error.message;
+                done.reject(error);
             } else {
                 done.resolve(stat);
             }
@@ -143,7 +150,8 @@ exports.statFd = function (fd) {
     try {
         FS.fstat(fd, function (error, stat) {
             if (error) {
-                done.reject("Can't statFd file descriptor " + JSON.stringify(fd) + ": " + error);
+                error.message = "Can't statFd file descriptor " + JSON.stringify(fd) + ": " + error.message;
+                done.reject(error);
             } else {
                 done.resolve(stat);
             }
@@ -161,7 +169,8 @@ exports.link = function (source, target) {
     try {
         FS.link(source, target, function (error) {
             if (error) {
-                done.reject("Can't link " + JSON.stringify(source) + " to " + JSON.stringify(target) + ": " + error);
+                error.message = "Can't link " + JSON.stringify(source) + " to " + JSON.stringify(target) + ": " + error.message;
+                done.reject(error);
             } else {
                 done.resolve();
             }
@@ -179,7 +188,8 @@ exports.symbolicLink = function (target, relative) {
     try {
         FS.symlink(relative, target, function (error) {
             if (error) {
-                done.reject("Can't create symbolicLink " + JSON.stringify(target) + " to relative location " + JSON.stringify(relative));
+                error.message = "Can't create symbolicLink " + JSON.stringify(target) + " to relative location " + JSON.stringify(relative) + ": " + error.message;
+                done.reject(error);
             } else {
                 done.resolve();
             }
@@ -202,7 +212,8 @@ exports.chown = function (path, uid, gid) {
     try {
         FS.chown(path, uid, gid, function (error) {
             if (error) {
-                done.reject("Can't chown (change owner) of " + JSON.stringify(path) + " to user " + JSON.stringify(uid) + " and group " + JSON.stringify(gid) + ": " + error);
+                error.message = "Can't chown (change owner) of " + JSON.stringify(path) + " to user " + JSON.stringify(uid) + " and group " + JSON.stringify(gid) + ": " + error.message;
+                done.reject(error);
             } else {
                 done.resolve();
             }
@@ -220,7 +231,8 @@ exports.chmod = function (path, mode) {
     try {
         FS.chmod(path, mode, function (error) {
             if (error) {
-                done.reject("Can't chmod (change permissions mode) of " + JSON.stringify(path) + " to (octal number) " + mode.toString(8) + ": " + error);
+                error.message = "Can't chmod (change permissions mode) of " + JSON.stringify(path) + " to (octal number) " + mode.toString(8) + ": " + error.message;
+                done.reject(error);
             } else {
                 done.resolve();
             }
@@ -242,9 +254,12 @@ exports.lastModified = function (path) {
 exports.canonical = function (path) {
     var result = Q.defer();
     FS.realpath(path, function (error, path) {
-        if (error)
-            return result.reject("Can't get canonical path of " + JSON.stringify(path) + " by way of C realpath: " + error);
-        result.resolve(path);
+        if (error) {
+            error.message = "Can't get canonical path of " + JSON.stringify(path) + " by way of C realpath: " + error.message;
+            result.reject(error);
+        } else {
+            result.resolve(path);
+        }
     });
     return result.promise;
 };
