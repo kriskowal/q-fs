@@ -21,8 +21,6 @@ exports.Mock = MOCK.Fs;
 exports.mock = MOCK.mock;
 exports.Root = ROOT.Fs;
 
-process.umask(0);
-
 /**
  * @param {String} path
  * @returns {Promise * Stream} a stream from the
@@ -52,7 +50,7 @@ exports.remove = function (path) {
     var done = Q.defer();
     FS.unlink(path, function (error) {
         if (error) {
-            done.reject(error);
+            done.reject("Can't remove " + JSON.stringify(path) + ": " + error);
         } else {
             done.resolve();
         }
@@ -66,7 +64,7 @@ exports.makeDirectory = function (path, mode) {
     mode = mode === undefined ? parseInt('755', 8) : mode;
     FS.mkdir(path, mode, function (error) {
         if (error) {
-            done.reject(error);
+            done.reject("Can't makeDirectory " + JSON.stringify(path) + " with mode " + mode + ": " + error);
         } else {
             done.resolve();
         }
@@ -79,7 +77,7 @@ exports.removeDirectory = function (path) {
     var done = Q.defer();
     FS.rmdir(path, function (error) {
         if (error) {
-            done.reject(error);
+            done.reject("Can't removeDirectory " + JSON.stringify(path) + ": " + error);
         } else {
             done.resolve();
         }
@@ -94,7 +92,7 @@ exports.list = function (path) {
     var result = Q.defer();
     FS.readdir(path, function (error, list) {
         if (error)
-            return result.reject(error);
+            return result.reject("Can't list " + JSON.stringify(path) + ": " + error);
         else
             result.resolve(list);
     });
@@ -107,89 +105,89 @@ exports.list = function (path) {
  */
 exports.stat = function (path) {
     path = String(path);
-    var deferred = Q.defer();
+    var done = Q.defer();
     try {
         FS.stat(path, function (error, stat) {
             if (error) {
-                deferred.reject(error);
+                done.reject("Can't stat " + JSON.stringify(path) + ": " + error);
             } else {
-                deferred.resolve(new exports.Stats(stat));
+                done.resolve(new exports.Stats(stat));
             }
         });
     } catch (error) {
-        deferred.reject(error);
+        done.reject(error);
     }
-    return Q.Lazy(exports.Stats, deferred.promise);
+    return Q.Lazy(exports.Stats, done.promise);
 };
 
 exports.statLink = function (path) {
     path = String(path);
-    var deferred = Q.defer();
+    var done = Q.defer();
     try {
         FS.lstat(path, function (error, stat) {
             if (error) {
-                deferred.reject(error);
+                done.reject("Can't statLink " + JSON.stringify(path) + ": " + error);
             } else {
-                deferred.resolve(stat);
+                done.resolve(stat);
             }
         });
     } catch (error) {
-        deferred.reject(error);
+        done.reject(error);
     }
-    return deferred.promise;
+    return done.promise;
 };
 
 exports.statFd = function (fd) {
     fd = Number(fd);
-    var deferred = Q.defer();
+    var done = Q.defer();
     try {
         FS.fstat(fd, function (error, stat) {
             if (error) {
-                deferred.reject(error);
+                done.reject("Can't statFd file descriptor " + JSON.stringify(fd) + ": " + error);
             } else {
-                deferred.resolve(stat);
+                done.resolve(stat);
             }
         });
     } catch (error) {
-        deferred.reject(error);
+        done.reject(error);
     }
-    return deferred.promise;
+    return done.promise;
 };
 
 exports.link = function (source, target) {
     source = String(source);
     target = String(target);
-    var deferred = Q.defer();
+    var done = Q.defer();
     try {
         FS.link(source, target, function (error) {
             if (error) {
-                deferred.reject(error);
+                done.reject("Can't link " + JSON.stringify(source) + " to " + JSON.stringify(target) + ": " + error);
             } else {
-                deferred.resolve();
+                done.resolve();
             }
         });
     } catch (error) {
-        deferred.reject(error);
+        done.reject(error);
     }
-    return deferred.promise;
+    return done.promise;
 };
 
 exports.symbolicLink = function (target, relative) {
     target = String(target);
     relative = String(relative);
-    var deferred = Q.defer();
+    var done = Q.defer();
     try {
         FS.symlink(relative, target, function (error) {
             if (error) {
-                deferred.reject(error);
+                done.reject("Can't create symbolicLink " + JSON.stringify(target) + " to relative location " + JSON.stringify(relative));
             } else {
-                deferred.resolve();
+                done.resolve();
             }
         });
     } catch (error) {
-        deferred.reject(error);
+        done.reject(error);
     }
-    return deferred.promise;
+    return done.promise;
 };
 
 exports.symbolicCopy = function (source, target) {
@@ -200,37 +198,37 @@ exports.symbolicCopy = function (source, target) {
 
 exports.chown = function (path, uid, gid) {
     path = String(path);
-    var deferred = Q.defer();
+    var done = Q.defer();
     try {
         FS.chown(path, uid, gid, function (error) {
             if (error) {
-                deferred.reject(error);
+                done.reject("Can't chown (change owner) of " + JSON.stringify(path) + " to user " + JSON.stringify(uid) + " and group " + JSON.stringify(gid) + ": " + error);
             } else {
-                deferred.resolve();
+                done.resolve();
             }
         });
     } catch (error) {
-        deferred.reject(error);
+        done.reject(error);
     }
-    return deferred.promise;
+    return done.promise;
 };
 
 exports.chmod = function (path, mode) {
     path = String(path);
     mode = String(mode);
-    var deferred = Q.defer();
+    var done = Q.defer();
     try {
         FS.chmod(path, mode, function (error) {
             if (error) {
-                deferred.reject(error);
+                done.reject("Can't chmod (change permissions mode) of " + JSON.stringify(path) + " to (octal number) " + mode.toString(8) + ": " + error);
             } else {
-                deferred.resolve();
+                done.resolve();
             }
         });
     } catch (error) {
-        deferred.reject(error);
+        done.reject(error);
     }
-    return deferred.promise;
+    return done.promise;
 };
 
 exports.lastModified = function (path) {
@@ -245,7 +243,7 @@ exports.canonical = function (path) {
     var result = Q.defer();
     FS.realpath(path, function (error, path) {
         if (error)
-            return result.reject(error);
+            return result.reject("Can't get canonical path of " + JSON.stringify(path) + " by way of C realpath: " + error);
         result.resolve(path);
     });
     return result.promise;
