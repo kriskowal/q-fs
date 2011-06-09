@@ -1,4 +1,9 @@
 
+0.1.8:
+ - Fixed a race condition in `makeTree`; not waiting for
+   parent directory to be created.
+ - Improved error messages.
+
 0.1.4:
  - Added `makeDirectory`.
  - Added `relative` function, which stats the source
