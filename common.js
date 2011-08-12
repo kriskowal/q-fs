@@ -24,9 +24,16 @@ exports.update = function (exports, workingDirectory) {
      * @param {Object} options
      * @returns {Promise * (String || Buffer)}
      */
-    exports.read = function (path, flags, charset) {
-        flags = "r" + (flags || "").replace(/r/g, "");
-        return Q.when(exports.open(path, flags, charset), function (stream) {
+    exports.read = function (path, flags, charset, options) {
+        if (typeof flags == "object") {
+            options = flags;
+        } else {
+            options = options || {};
+            options.flags = flags;
+            options.carset = charset;
+        }
+        options.flags = "r" + (options.flags || "").replace(/r/g, "");
+        return Q.when(exports.open(path, options), function (stream) {
             return stream.read();
         }, function (reason) {
             var message = "Can't read " + path;
@@ -51,9 +58,16 @@ exports.update = function (exports, workingDirectory) {
      * @returns {Promise * Undefined} a promise that resolves
      * when the writing is complete.
      */
-    exports.write = function (path, content, flags, charset) {
-        flags = "w" + (flags || "").replace(/w/g, "");
-        return Q.when(exports.open(path, flags, charset), function (stream) {
+    exports.write = function (path, content, flags, charset, options) {
+        if (typeof flags == "object") {
+            options = flags;
+        } else {
+            options = options || {};
+            options.flags = flags;
+            options.carset = charset;
+        }
+        options.flags = "w" + (options.flags || "").replace(/w/g, "");
+        return Q.when(exports.open(path, options), function (stream) {
             return Q.when(stream.write(content), function () {
                 return stream.close();
             });
@@ -61,9 +75,16 @@ exports.update = function (exports, workingDirectory) {
     };
 
     // TODO append
-    exports.append = function (path, content, flags, charset) {
-        flags = "w+" + (flags || "").replace(/[w\+]/g, "");
-        return Q.when(exports.open(path, flags, charset), function (stream) {
+    exports.append = function (path, content, flags, charset, options) {
+        if (typeof flags == "object") {
+            options = flags;
+        } else {
+            options = options || {};
+            options.flags = flags;
+            options.carset = charset;
+        }
+        options.flags = "w+" + (options.flags || "").replace(/[w\+]/g, "");
+        return Q.when(exports.open(path, options), function (stream) {
             return Q.when(stream.write(content), function () {
                 return stream.close();
             });

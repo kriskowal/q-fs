@@ -35,7 +35,9 @@ exports['test mock'] = function (ASSERT, done) {
             "a/b/c/1/2",
             "a/b/c/1/2/3"
         ].sort(), "subtree list");
-    }).then(null, Q.error).then(done);
+    })
+    .fin(done)
+    .end()
 
 };
 

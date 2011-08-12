@@ -16,7 +16,8 @@ exports['test merge'] = function (ASSERT, done) {
     Q.when(output, function (output) {
         ASSERT.deepEqual(output, input, 'toObject');
     })
-    .then(null, Q.error).then(done);
+    .fin(done)
+    .end()
 
 };
 

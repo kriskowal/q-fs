@@ -1,8 +1,8 @@
 (function (require, exports) {
 
 var Q = require("qq");
-var FS = require("q-fs");
 var BOOT = require("fs-boot");
+var FS = require("./q-fs");
 var COMMON = require("./common");
 
 var Fs = exports.Fs = function (files) {
@@ -69,7 +69,14 @@ var Fs = exports.Fs = function (files) {
         });
     };
 
-    fs.open = function (path, flags, charset) {
+    fs.open = function (path, flags, charset, options) {
+        if (typeof flags == "object") {
+            options = flags;
+            flags = options.flags;
+            charset = options.charset;
+        } else {
+            options = options || {};
+        }
         var node = find(root, path);
         // TODO create an actual open file object, rather
         // than this rather primitive duck

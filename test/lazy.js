@@ -13,12 +13,17 @@ exports['test lazy list mock'] = function (ASSERT, done) {
     var results = [".", "a", "a/b", "a/b/c"];
     fs.listTree("").forEach(function (name, i) {
         ASSERT.equal(name, results.shift(), 'tree is lazy array: ' + i);
-    }).then(done, done);
+    })
+    .fin(done)
+    .end()
 };
 
 exports['test lazy stat'] = function (ASSERT, done) {
     // the isFile should not throw an exception
-    FS.stat(__filename).isFile().then(done, done);
+    FS.stat(__filename)
+    .isFile()
+    .fin(done)
+    .end()
 };
 
 if (require.main === module) {

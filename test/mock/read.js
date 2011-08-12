@@ -21,7 +21,8 @@ exports['test merge'] = function (ASSERT, done) {
             });
         });
     })
-    .then(null, Q.error).then(done);
+    .fin(done)
+    .end()
 
 };
 

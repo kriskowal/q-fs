@@ -12,9 +12,9 @@ var FS = require("fs"); // node
 var SYS = require("sys"); // node
 var Q = require("qq");
 var IO = require("q-io");
-var COMMON = require("./lib/common");
-var MOCK = require("./lib/mock");
-var ROOT = require("./lib/root");
+var COMMON = require("./common");
+var MOCK = require("./mock");
+var ROOT = require("./root");
 
 COMMON.update(exports, process.cwd);
 exports.Mock = MOCK.Fs;
@@ -23,12 +23,30 @@ exports.Root = ROOT.Fs;
 
 /**
  * @param {String} path
- * @returns {Promise * Stream} a stream from the
- * `narwhal/q-io` module.
+ * @param {Object} options (flags, mode, bufferSize, charset, begin, end)
+ * @returns {Promise * Stream} a stream from the `q-io` module.
  */
-exports.open = function (path, flags, charset) {
+exports.open = function (path, flags, charset, options) {
+    if (typeof flags == "object") {
+        options = flags;
+        flags = options.flags;
+        charset = options.charset;
+    }
+    options = options || {};
     flags = flags || "r";
-    var options = {"flags": flags.replace(/b/g, "")};
+    var nodeOptions = {
+        "flags": flags.replace(/b/g, "")
+    };
+    if ("bufferSize" in options) {
+        nodeOptions.bufferSize = options.bufferSize;
+    }
+    if ("mode" in options) {
+        nodeOptions.mode = options.mode;
+    }
+    if ("start" in options) {
+        nodeOptions.start = options.begin;
+        nodeOptions.end = options.end - 1;
+    }
     if (flags.indexOf("b") >= 0) {
         if (charset) {
             throw new Error("Can't open a binary file with a charset: " + charset);
@@ -37,10 +55,10 @@ exports.open = function (path, flags, charset) {
         charset = charset || "binary";
     }
     if (flags.indexOf("w") >= 0) {
-        var stream = FS.createWriteStream(String(path), options);
+        var stream = FS.createWriteStream(String(path), nodeOptions);
         return IO.Writer(stream, charset);
     } else {
-        var stream = FS.createReadStream(String(path), options);
+        var stream = FS.createReadStream(String(path), nodeOptions);
         return IO.Reader(stream, charset);
     }
 };

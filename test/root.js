@@ -4,7 +4,6 @@ var Q = require("qq");
 var FS = require("q-fs");
 var Root = FS.Root;
 var Mock = FS.Mock;
-var ASSERT = require("assert");
 
 exports['test root mock'] = function (ASSERT, done) {
 
@@ -41,10 +40,10 @@ exports['test root mock'] = function (ASSERT, done) {
             "3"
         ], 'listTree of "chrooted" mock');
 
-    }).then(done, function (error) {
-        ASSERT.ok(false, 'error');
-        done();
-    });
+    })
+    .fin(done)
+    .end()
+
 };
 
 if (require.main === module) {
