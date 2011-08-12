@@ -1,4 +1,8 @@
 
+# 0.1.12
+
+-   Added a test (and fixed) partial/range read support.
+
 # 0.1.11
 
 -   Switched to Markdown

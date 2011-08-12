@@ -43,7 +43,7 @@ exports.open = function (path, flags, charset, options) {
     if ("mode" in options) {
         nodeOptions.mode = options.mode;
     }
-    if ("start" in options) {
+    if ("begin" in options) {
         nodeOptions.start = options.begin;
         nodeOptions.end = options.end - 1;
     }
