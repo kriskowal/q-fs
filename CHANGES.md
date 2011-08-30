@@ -1,4 +1,8 @@
 
+# 0.1.13
+
+-   Updated ``fs-boot`` dependency to fix ``directory``.
+
 # 0.1.12
 
 -   Added a test (and fixed) partial/range read support.
