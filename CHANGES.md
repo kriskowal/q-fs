@@ -1,4 +1,9 @@
 
+# Next
+
+-   Fixed a bug with "binary" encoding producing strings
+    instead of buffers.
+
 # 0.1.13
 
 -   Updated ``fs-boot`` dependency to fix ``directory``.

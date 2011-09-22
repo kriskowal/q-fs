@@ -51,8 +51,6 @@ exports.open = function (path, flags, charset, options) {
         if (charset) {
             throw new Error("Can't open a binary file with a charset: " + charset);
         }
-    } else {
-        charset = charset || "binary";
     }
     if (flags.indexOf("w") >= 0) {
         var stream = FS.createWriteStream(String(path), nodeOptions);
