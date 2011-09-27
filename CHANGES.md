@@ -1,4 +1,8 @@
 
+# 0.1.16
+
+-   Synchronized dependencies.
+
 # 0.1.15
 
 -   Fixed a bug with "binary" encoding producing strings
