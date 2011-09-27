@@ -1,4 +1,10 @@
 
+# 0.1.17
+
+-   Fixed issue #1 (@hornairs), FS.write returns a deferred
+    instead of a promise for the completion of the writing.
+-   Synchronized dependency on q-io, again.
+
 # 0.1.16
 
 -   Synchronized dependencies.
