@@ -1,6 +1,6 @@
 {
     "name": "q-fs",
-    "version": "0.1.17",
+    "version": "0.1.18",
     "description": "Q Promise wrappers for Node's file system.",
     "homepage": "http://github.com/kriskowal/q-fs/",
     "author": "Kris Kowal <kris@cixar.com> (http://github.com/kriskowal/)",
