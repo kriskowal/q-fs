@@ -1,4 +1,8 @@
 
+# Next
+
+-   Added readLink.
+
 # 0.1.17
 
 -   Fixed issue #1 (@hornairs), FS.write returns a deferred

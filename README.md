@@ -43,6 +43,7 @@ Functions:
 -   ``normal(...paths)``
 -   ``absolute(path)``
 -   ``canonical(path)``
+-   ``readLink(path)``
 -   ``contains(parent, child)``
 -   ``relative(source, target)``
 -   ``relativeFromFile(source, target)``

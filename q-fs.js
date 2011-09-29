@@ -280,3 +280,16 @@ exports.canonical = function (path) {
     return result.promise;
 };
 
+exports.readLink = function (path) {
+    var result = Q.defer();
+    FS.readlink(path, function (error, path) {
+        if (error) {
+            error.message = "Can't get link from " + JSON.stringify(path) + " by way of C readlink: " + error.message;
+            result.reject(error);
+        } else {
+            result.resolve(path);
+        }
+    });
+    return result.promise;
+};
+
