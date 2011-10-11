@@ -1,4 +1,8 @@
 
+# 0.1.19
+
+-   Synchronized Q, QQ, Q-IO.
+
 # 0.1.18
 
 -   Added readLink.
