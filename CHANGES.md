@@ -1,4 +1,8 @@
 
+# 0.1.20
+
+-   Updated for Node 0.6, removed SYS dependency (@domenicdenicola #2)
+
 # 0.1.19
 
 -   Synchronized Q, QQ, Q-IO.
