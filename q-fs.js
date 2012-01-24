@@ -9,7 +9,6 @@
 /*whatsupdoc*/
 
 var FS = require("fs"); // node
-var SYS = require("sys"); // node
 var Q = require("qq");
 var IO = require("q-io");
 var COMMON = require("./common");
