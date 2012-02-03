@@ -1,4 +1,9 @@
 
+# 0.1.21
+
+-   Synchronized Q and Q-IO.  Q-IO needed a similar fix to below for
+    Node 0.7 compatibility, depending on SYS.
+
 # 0.1.20
 
 -   Updated for Node 0.6, removed SYS dependency (@domenicdenicola #2)
