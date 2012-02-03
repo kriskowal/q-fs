@@ -1,4 +1,6 @@
 
+[![Build Status](https://secure.travis-ci.org/kriskowal/q-fs.png)](http://travis-ci.org/kriskowal/q-fs)
+
 File system API for Q when/defer-style promises
 
 Open options:
