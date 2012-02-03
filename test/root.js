@@ -1,7 +1,7 @@
 "use strict";
 
 var Q = require("qq");
-var FS = require("q-fs");
+var FS = require("../q-fs");
 var Root = FS.Root;
 var Mock = FS.Mock;
 
@@ -25,7 +25,7 @@ exports['test root mock'] = function (ASSERT, done) {
     }), function (trees) {
 
         ASSERT.deepEqual(trees.mock, [
-            ".", 
+            ".",
             "a",
             "a/b",
             "a/b/1",
@@ -34,7 +34,7 @@ exports['test root mock'] = function (ASSERT, done) {
         ], 'listTree of mock');
 
         ASSERT.deepEqual(trees.chroot, [
-            ".", 
+            ".",
             "1",
             "2",
             "3"

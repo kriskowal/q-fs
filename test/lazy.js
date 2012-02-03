@@ -1,6 +1,6 @@
 
 var Q = require("q");
-var FS = require("q-fs");
+var FS = require("../q-fs");
 
 exports['test lazy list mock'] = function (ASSERT, done) {
     var fs = FS.Mock({

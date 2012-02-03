@@ -1,5 +1,5 @@
 var Q = require("q");
-var FS = require("q-fs");
+var FS = require("../../q-fs");
 
 exports["test write/remove"] = function (assert, done) {
     var fileName = FS.join(module.directory || __dirname, "fixture.txt");

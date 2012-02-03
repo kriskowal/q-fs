@@ -1,5 +1,5 @@
 
-var FS = require("q-fs");
+var FS = require("../q-fs");
 
 module.exports = function (ASSERT, done) {
 

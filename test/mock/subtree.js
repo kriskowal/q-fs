@@ -1,9 +1,9 @@
 "use strict";
 
 var Q = require("qq");
-var FS = require("q-fs");
-var Root = require("q-fs").Root;
-var Mock = require("q-fs").Mock;
+var FS = require("../../q-fs");
+var Root = require("../../q-fs").Root;
+var Mock = require("../../q-fs").Mock;
 var ASSERT = require("assert");
 
 exports['test mock'] = function (ASSERT, done) {

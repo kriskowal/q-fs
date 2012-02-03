@@ -1,7 +1,7 @@
 "use strict";
 
 var Q = require("qq");
-var FS = require("q-fs");
+var FS = require("../../q-fs");
 var Root = FS.Root;
 var Mock = FS.Mock;
 var ASSERT = require("assert");
