@@ -1,4 +1,8 @@
 
+# 0.1.24
+
+-   Added support for graceful back-off on the file descriptor pool
+
 # 0.1.21
 
 -   Synchronized Q and Q-IO.  Q-IO needed a similar fix to below for
