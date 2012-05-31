@@ -9,7 +9,7 @@
 /*whatsupdoc*/
 
 var FS = require("fs"); // node
-var Q = require("qq");
+var Q = require("q");
 var IO = require("q-io");
 var COMMON = require("./common");
 var MOCK = require("./mock");
@@ -141,7 +141,7 @@ exports.list = dampen(function (path) {
             result.resolve(list);
         }
     });
-    return Q.Lazy(Array, result.promise);
+    return result.promise;
 });
 
 /**
@@ -164,7 +164,7 @@ exports.stat = function (path) {
     } catch (error) {
         done.reject(error);
     }
-    return Q.Lazy(exports.Stats, done.promise);
+    return done.promise;
 };
 
 exports.statLink = function (path) {
