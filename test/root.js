@@ -1,6 +1,6 @@
 "use strict";
 
-var Q = require("qq");
+var Q = require("q");
 var FS = require("../q-fs");
 var Root = FS.Root;
 var Mock = FS.Mock;
@@ -19,12 +19,12 @@ exports['test root mock'] = function (ASSERT, done) {
     var chroot = Root(mock, "a/b");
 
     // grab the file trees of both
-    return Q.when(Q.shallow({
-        "mock": mock.listTree(),
-        "chroot": Q.post(chroot, "listTree")
-    }), function (trees) {
+    return Q.spread(Q.all([
+        mock.listTree(),
+        Q.post(chroot, "listTree")
+    ]), function (mock, chroot) {
 
-        ASSERT.deepEqual(trees.mock, [
+        ASSERT.deepEqual(mock, [
             ".",
             "a",
             "a/b",
@@ -33,7 +33,7 @@ exports['test root mock'] = function (ASSERT, done) {
             "a/b/3"
         ], 'listTree of mock');
 
-        ASSERT.deepEqual(trees.chroot, [
+        ASSERT.deepEqual(chroot, [
             ".",
             "1",
             "2",

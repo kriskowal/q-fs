@@ -16,9 +16,8 @@
     ],
     "main": "q-fs.js",
     "dependencies": {
-        "q": "0.8.2",
-        "qq": "0.3.4",
-        "q-io": "0.0.12",
+        "q": "0.8.4",
+        "q-io": "0.0.13",
         "fs-boot": "0.0.8"
     },
     "devDependencies": {
