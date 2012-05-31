@@ -33,10 +33,10 @@ exports.update = function (exports, workingDirectory) {
             options.carset = charset;
         }
         options.flags = "r" + (options.flags || "").replace(/r/g, "");
-        return Q.when(exports.open(path, options), function (stream) {
+        return Q.when(this.open(path, options), function (stream) {
             return stream.read();
         }, function (reason) {
-            var message = "Can't read " + path;
+            var message = "Can't read " + path + ": " + reason.message;
             return Q.reject({
                 "toString": function () {
                     return JSON.stringify(this);
@@ -59,6 +59,7 @@ exports.update = function (exports, workingDirectory) {
      * when the writing is complete.
      */
     exports.write = function (path, content, flags, charset, options) {
+        var self = this;
         if (typeof flags == "object") {
             options = flags;
         } else {
@@ -67,7 +68,7 @@ exports.update = function (exports, workingDirectory) {
             options.carset = charset;
         }
         options.flags = "w" + (options.flags || "").replace(/w/g, "");
-        return Q.when(exports.open(path, options), function (stream) {
+        return Q.when(self.open(path, options), function (stream) {
             return Q.when(stream.write(content), function () {
                 return stream.close();
             });
@@ -76,6 +77,7 @@ exports.update = function (exports, workingDirectory) {
 
     // TODO append
     exports.append = function (path, content, flags, charset, options) {
+        var self = this;
         if (typeof flags == "object") {
             options = flags;
         } else {
@@ -84,7 +86,7 @@ exports.update = function (exports, workingDirectory) {
             options.carset = charset;
         }
         options.flags = "w+" + (options.flags || "").replace(/[w\+]/g, "");
-        return Q.when(exports.open(path, options), function (stream) {
+        return Q.when(self.open(path, options), function (stream) {
             return Q.when(stream.write(content), function () {
                 return stream.close();
             });
@@ -96,13 +98,14 @@ exports.update = function (exports, workingDirectory) {
     /**
      */
     exports.listTree = function (basePath, guard) {
+        var self = this;
         basePath = String(basePath || '');
         if (!basePath)
             basePath = ".";
         guard = guard || function () {
             return true;
         };
-        var stat = exports.stat(basePath);
+        var stat = self.stat(basePath);
         return Q.Lazy(Array, Q.when(stat, function (stat) {
             var paths = [];
             var mode; // true:include, false:exclude, null:no-recur
@@ -116,10 +119,10 @@ exports.update = function (exports, workingDirectory) {
                     paths.push([basePath]);
                 }
                 if (include !== null && stat.isDirectory()) {
-                    return Q.when(exports.list(basePath), function (children) {
+                    return Q.when(self.list(basePath), function (children) {
                         paths.push.apply(paths, children.map(function (child) {
-                            var path = exports.join(basePath, child);
-                            return exports.listTree(path, guard);
+                            var path = self.join(basePath, child);
+                            return self.listTree(path, guard);
                         }));
                         return paths;
                     });
@@ -131,23 +134,24 @@ exports.update = function (exports, workingDirectory) {
             return [];
         }).then(Q.shallow).then(concat));
     };
-    
+
     exports.listDirectoryTree = function (path) {
-        return exports.listTree(path, function (path, stat) {
+        return this.listTree(path, function (path, stat) {
             return stat.isDirectory();
         });
     };
 
     exports.makeTree = function (path, mode) {
-        var parts = exports.split(path);
+        var self = this;
+        var parts = self.split(path);
         var at = [];
-        if (exports.isAbsolute(path))
-            at.push(exports.ROOT);
+        if (self.isAbsolute(path))
+            at.push(self.ROOT);
         return parts.reduce(function (parent, part) {
             return Q.when(parent, function () {
                 at.push(part);
-                var parts = exports.join(at);
-                var made = exports.makeDirectory(parts, mode);
+                var parts = self.join(at);
+                var made = self.makeDirectory(parts, mode);
                 return Q.when(made, null, function rejected(reason) {
                     // throw away errors for already made directories
                     if (reason.code == "EEXIST") {
@@ -161,33 +165,34 @@ exports.update = function (exports, workingDirectory) {
     };
 
     exports.removeTree = function (path) {
-        return Q.when(exports.stat(path), function (stat) {
+        var self = this;
+        return Q.when(self.stat(path), function (stat) {
             if (stat.isLink()) {
-                return exports.remove(path);
+                return self.remove(path);
             } else if (stat.isDirectory()) {
-                var list = exports.list(path);
+                var list = self.list(path);
                 return Q.when(list, function (list) {
                     // asynchronously remove every subtree
                     var done = list.reduce(function (prev, name) {
-                        var child = exports.join(path, name);
-                        var next = exports.removeTree(child);
+                        var child = self.join(path, name);
+                        var next = self.removeTree(child);
                         // join next and prev
                         return Q.when(prev, function () {
                             return next;
                         });
                     });
                     return Q.when(done, function () {
-                        exports.removeDirectory(path);
+                        self.removeDirectory(path);
                     });
                 });
             } else {
-                return exports.remove(path);
+                return self.remove(path);
             }
         });
     };
 
     exports.exists = function (path) {
-        return Q.when(exports.stat(path), function () {
+        return Q.when(this.stat(path), function () {
             return true;
         }, function () {
             return false;
@@ -195,7 +200,7 @@ exports.update = function (exports, workingDirectory) {
     };
 
     exports.isFile = function (path) {
-        return Q.when(exports.stat(path), function (stat) {
+        return Q.when(this.stat(path), function (stat) {
             return stat.isFile();
         }, function (reason) {
             return false;
@@ -203,7 +208,7 @@ exports.update = function (exports, workingDirectory) {
     };
 
     exports.isDirectory = function (path) {
-        return Q.when(exports.stat(path), function (stat) {
+        return Q.when(this.stat(path), function (stat) {
             return stat.isDirectory();
         }, function (reason) {
             return false;
@@ -211,26 +216,28 @@ exports.update = function (exports, workingDirectory) {
     };
 
     exports.absolute = function (path) {
-        if (exports.isAbsolute(path))
+        if (this.isAbsolute(path))
             return path;
-        return exports.join(workingDirectory(), path);
+        return this.join(workingDirectory(), path);
     };
 
     exports.relative = function (source, target) {
-        return Q.when(exports.isDirectory(source), function (isDirectory) {
+        var self = this;
+        return Q.when(this.isDirectory(source), function (isDirectory) {
             if (isDirectory) {
-                return exports.relativeFromDirectory(source, target);
+                return self.relativeFromDirectory(source, target);
             } else {
-                return exports.relativeFromFile(source, target);
+                return self.relativeFromFile(source, target);
             }
         });
     };
 
     exports.relativeFromFile = function (source, target) {
-        source = exports.absolute(source);
-        target = exports.absolute(target);
-        source = source.split(exports.SEPARATORS_RE());
-        target = target.split(exports.SEPARATORS_RE());
+        var self = this;
+        source = self.absolute(source);
+        target = self.absolute(target);
+        source = source.split(self.SEPARATORS_RE());
+        target = target.split(self.SEPARATORS_RE());
         source.pop();
         while (
             source.length &&
@@ -244,7 +251,7 @@ exports.update = function (exports, workingDirectory) {
             source.shift();
             target.unshift("..");
         }
-        return target.join(exports.SEPARATOR);
+        return target.join(self.SEPARATOR);
     };
 
     exports.relativeFromDirectory = function (source, target) {
@@ -252,10 +259,10 @@ exports.update = function (exports, workingDirectory) {
             target = source;
             source = workingDirectory();
         }
-        source = exports.absolute(source);
-        target = exports.absolute(target);
-        source = source.split(exports.SEPARATORS_RE());
-        target = target.split(exports.SEPARATORS_RE());
+        source = this.absolute(source);
+        target = this.absolute(target);
+        source = source.split(this.SEPARATORS_RE());
+        target = target.split(this.SEPARATORS_RE());
         if (source.length === 2 && source[1] === "")
             source.pop();
         while (
@@ -270,15 +277,15 @@ exports.update = function (exports, workingDirectory) {
             source.shift();
             target.unshift("..");
         }
-        return target.join(exports.SEPARATOR);
+        return target.join(this.SEPARATOR);
     };
 
     exports.contains = function (parent, child) {
         var i, ii;
-        parent = exports.absolute(parent);
-        child = exports.absolute(child);
-        parent = parent.split(exports.SEPARATORS_RE());
-        child = child.split(exports.SEPARATORS_RE());
+        parent = this.absolute(parent);
+        child = this.absolute(child);
+        parent = parent.split(this.SEPARATORS_RE());
+        child = child.split(this.SEPARATORS_RE());
         if (parent.length === 2 && parent[1] === "")
             parent.pop();
         if (parent.length > child.length)
@@ -292,30 +299,32 @@ exports.update = function (exports, workingDirectory) {
 
     exports.reroot = reroot;
     function reroot(path) {
-        path = path || exports.ROOT;
-        return Q.when(exports.list(path), function (list) {
+        var self = this;
+        path = path || this.ROOT;
+        return Q.when(this.list(path), function (list) {
             if (list.length !== 1)
-                return ROOT.Fs(exports, path);
-            var nextPath = exports.join(path, list[0]);
-            return Q.when(exports.stat(nextPath), function (stat) {
+                return ROOT.Fs(self, path);
+            var nextPath = self.join(path, list[0]);
+            return Q.when(self.stat(nextPath), function (stat) {
                 if (stat.isDirectory()) {
                     return reroot(nextPath);
                 } else {
-                    return ROOT.Fs(exports, path);
+                    return ROOT.Fs(self, path);
                 }
             });
         });
     }
 
     exports.toObject = function (path) {
-        var list = exports.listTree(path || "", function (path, stat) {
+        var self = this;
+        var list = self.listTree(path || "", function (path, stat) {
             return stat.isFile();
         });
         return Q.when(list, function (list) {
             var tree = {};
             var done;
             list.forEach(function (path) {
-                tree[path] = exports.read(path, "rb");
+                tree[path] = self.read(path, "rb");
             });
             return Q.when(done, function () {
                 return Q.shallow(tree);

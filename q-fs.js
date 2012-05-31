@@ -20,12 +20,37 @@ exports.Mock = MOCK.Fs;
 exports.mock = MOCK.mock;
 exports.Root = ROOT.Fs;
 
+// facilitates AIMD (additive increase, multiplicative decrease) for backing off
+var backOffDelay = 0;
+var backOffFactor = 1.0001;
+function dampen(wrapped, thisp) {
+    var retry = function () {
+        var args = arguments;
+        var ready = backOffDelay ? Q.delay(backOffDelay) : Q.resolve();
+        return ready.then(function () {
+            return Q.when(wrapped.apply(thisp, args), function (stream) {
+                backOffDelay = Math.max(0, backOffDelay - 1);
+                return stream;
+            }, function (error) {
+                if (error.code === "EMFILE") {
+                    backOffDelay = (backOffDelay + 1) * backOffFactor;
+                    return retry.apply(null, args);
+                } else {
+                    throw error;
+                }
+            });
+        });
+    };
+    return retry;
+}
+
 /**
  * @param {String} path
  * @param {Object} options (flags, mode, bufferSize, charset, begin, end)
  * @returns {Promise * Stream} a stream from the `q-io` module.
  */
-exports.open = function (path, flags, charset, options) {
+exports.open = dampen(function (path, flags, charset, options) {
+    var self = this;
     if (typeof flags == "object") {
         options = flags;
         flags = options.flags;
@@ -58,7 +83,7 @@ exports.open = function (path, flags, charset, options) {
         var stream = FS.createReadStream(String(path), nodeOptions);
         return IO.Reader(stream, charset);
     }
-};
+});
 
 exports.remove = function (path) {
     path = String(path);
@@ -105,7 +130,7 @@ exports.removeDirectory = function (path) {
 
 /**
  */
-exports.list = function (path) {
+exports.list = dampen(function (path) {
     path = String(path);
     var result = Q.defer();
     FS.readdir(path, function (error, list) {
@@ -117,13 +142,14 @@ exports.list = function (path) {
         }
     });
     return Q.Lazy(Array, result.promise);
-};
+});
 
 /**
  * @param {String} path
  * @returns {Promise * Stat}
  */
 exports.stat = function (path) {
+    var self = this;
     path = String(path);
     var done = Q.defer();
     try {
@@ -132,7 +158,7 @@ exports.stat = function (path) {
                 error.message = "Can't stat " + JSON.stringify(path) + ": " + error;
                 done.reject(error);
             } else {
-                done.resolve(new exports.Stats(stat));
+                done.resolve(new self.Stats(stat));
             }
         });
     } catch (error) {
@@ -259,7 +285,8 @@ exports.chmod = function (path, mode) {
 };
 
 exports.lastModified = function (path) {
-    var stat = exports.stat(path);
+    var self = this;
+    var stat = self.stat(path);
     var mtime = Q.get(stat, 'mtime');
     return Q.when(mtime, function (mtime) {
         return Date.parse(mtime);
