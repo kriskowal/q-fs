@@ -1,5 +1,11 @@
 
-# 0.1.24
+# 0.1.26
+
+-   Fix lingering QQ dependency.
+-   list and stat no longer return lazy Array or Stat objects, but
+    rather normal promises.
+
+# 0.1.25
 
 -   Added support for graceful back-off on the file descriptor pool
 
