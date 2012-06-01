@@ -1,6 +1,6 @@
 (function (require, exports) {
 
-var Q = require("qq");
+var Q = require("q");
 var BOOT = require("fs-boot");
 var FS = require("./q-fs");
 var COMMON = require("./common");
@@ -166,21 +166,18 @@ GenericNode.prototype.isDirectory = function () {
 exports.mock = function (fs, root) {
     return Q.when(fs.listTree(root), function (list) {
         var tree = {};
-        var done;
-        list.forEach(function (path) {
+        return Q.all(list.map(function (path) {
             var actual = fs.join(root, path);
             var relative = fs.relativeFromDirectory(root, actual);
-            var partial = Q.when(fs.stat(actual), function (stat) {
+            return Q.when(fs.stat(actual), function (stat) {
                 if (stat.isFile()) {
-                    tree[relative] = fs.read(path, "rb");
+                    return Q.when(fs.read(path, "rb"), function (content) {
+                        tree[relative] = content;
+                    });
                 }
             });
-            done = Q.when(done, function () {
-                return partial;
-            });
-        });
-        return Q.when(done, function () {
-            return Q.when(Q.shallow(tree), Fs);
+        })).then(function () {
+            return Fs(tree);
         });
     });
 };
