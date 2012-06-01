@@ -1,6 +1,6 @@
 "use strict";
 
-var Q = require("qq");
+var Q = require("q");
 var FS = require("../../q-fs");
 var Root = require("../../q-fs").Root;
 var Mock = require("../../q-fs").Mock;
