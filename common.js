@@ -1,6 +1,6 @@
 (function (require, exports) {
 
-var Q = require("qq");
+var Q = require("q");
 var FS_BOOT = require("fs-boot");
 var ROOT = require("./root");
 var MOCK = require("./mock");
@@ -106,7 +106,7 @@ exports.update = function (exports, workingDirectory) {
             return true;
         };
         var stat = self.stat(basePath);
-        return Q.Lazy(Array, Q.when(stat, function (stat) {
+        return Q.when(stat, function (stat) {
             var paths = [];
             var mode; // true:include, false:exclude, null:no-recur
             try {
@@ -132,7 +132,7 @@ exports.update = function (exports, workingDirectory) {
             });
         }, function noSuchFile(reason) {
             return [];
-        }).then(Q.shallow).then(concat));
+        }).then(Q.all).then(concat);
     };
 
     exports.listDirectoryTree = function (path) {
@@ -322,12 +322,12 @@ exports.update = function (exports, workingDirectory) {
         });
         return Q.when(list, function (list) {
             var tree = {};
-            var done;
-            list.forEach(function (path) {
-                tree[path] = self.read(path, "rb");
-            });
-            return Q.when(done, function () {
-                return Q.shallow(tree);
+            return Q.all(list.map(function (path) {
+                return Q.when(self.read(path, "rb"), function (content) {
+                    tree[path] = content;
+                });
+            })).then(function () {
+                return tree;
             });
         });
     };
@@ -336,21 +336,21 @@ exports.update = function (exports, workingDirectory) {
         var tree = {};
         var done;
         fss.forEach(function (fs) {
-            // fetch lists in parallel
-            var list = fs.listTree("", function (path, stat) {
-                return stat.isFile();
-            });
-            // merge each fs serially
             done = Q.when(done, function () {
-                return Q.when(list, function (list) {
-                    list.forEach(function (path) {
-                        tree[path] = fs.read(path, "rb");
-                    });
+                return fs.listTree("", function (path, stat) {
+                    return stat.isFile();
+                })
+                .then(function (list) {
+                    return Q.all(list.map(function (path) {
+                        return Q.when(fs.read(path, "rb"), function (content) {
+                            tree[path] = content;
+                        });
+                    }));
                 });
             });
-        });
+        })
         return Q.when(done, function () {
-            return Q.when(Q.shallow(tree), MOCK.Fs);
+            return MOCK.Fs(tree);
         });
     };
 
