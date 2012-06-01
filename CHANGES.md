@@ -1,4 +1,8 @@
 
+# 0.1.27
+
+-   Fixed the build
+
 # 0.1.26
 
 -   Fix lingering QQ dependency.
