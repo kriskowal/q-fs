@@ -1,8 +1,10 @@
 
-var SYS = require("sys");
 var FS = require("q-fs");
-var Q = require("q");
-Q.when(FS.read('package.json'), function (content) {
-    SYS.puts(content);
-});
+var location = FS.join(module.directory || __dirname, '..', 'package.json');
+
+FS.read(location, {charset: 'utf-8'})
+.then(function (content) {
+    console.log(content);
+})
+.end()
 
