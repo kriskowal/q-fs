@@ -154,7 +154,7 @@ exports.update = function (exports, workingDirectory) {
                 var made = self.makeDirectory(parts, mode);
                 return Q.when(made, null, function rejected(reason) {
                     // throw away errors for already made directories
-                    if (reason.code == "EEXIST") {
+                    if (reason.code == "EEXIST" || reason.code == "EISDIR") {
                         return;
                     } else {
                         return Q.reject(reason);
