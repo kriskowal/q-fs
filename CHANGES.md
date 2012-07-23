@@ -1,4 +1,8 @@
 
+# 0.1.29
+
+-   Fixes `makeTree` on the latest Mac OS X.
+
 # 0.1.27
 
 -   Fixed the build
