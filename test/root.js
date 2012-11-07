@@ -42,7 +42,7 @@ exports['test root mock'] = function (ASSERT, done) {
 
     })
     .fin(done)
-    .end()
+    .done()
 
 };
 

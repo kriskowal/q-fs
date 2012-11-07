@@ -15,7 +15,7 @@ exports["test write/remove"] = function (assert, done) {
        });
     })
     .fin(done)
-    .end()
+    .done()
 
 };
 

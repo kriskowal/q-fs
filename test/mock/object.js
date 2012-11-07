@@ -17,7 +17,7 @@ exports['test merge'] = function (ASSERT, done) {
         ASSERT.deepEqual(output, input, 'toObject');
     })
     .fin(done)
-    .end()
+    .done()
 
 };
 

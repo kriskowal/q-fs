@@ -16,7 +16,7 @@ module.exports = function (ASSERT, done) {
         ASSERT.equal(content, "23", "partial read");
     })
     .fin(done)
-    .end()
+    .done()
 
 };
 
