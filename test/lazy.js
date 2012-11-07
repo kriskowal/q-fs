@@ -15,7 +15,7 @@ exports['test lazy list mock'] = function (ASSERT, done) {
         ASSERT.equal(name, results.shift(), 'tree is lazy array: ' + i);
     })
     .fin(done)
-    .end()
+    .done()
 };
 
 exports['test lazy stat'] = function (ASSERT, done) {
@@ -23,7 +23,7 @@ exports['test lazy stat'] = function (ASSERT, done) {
     FS.stat(__filename)
     .isFile()
     .fin(done)
-    .end()
+    .done()
 };
 
 if (require.main === module) {

@@ -37,7 +37,7 @@ exports['test mock'] = function (ASSERT, done) {
         ].sort(), "subtree list");
     })
     .fin(done)
-    .end()
+    .done()
 
 };
 
