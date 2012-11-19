@@ -222,12 +222,12 @@ exports.link = function (source, target) {
     return done.promise;
 };
 
-exports.symbolicLink = function (target, relative) {
+exports.symbolicLink = function (target, relative, type) {
     target = String(target);
     relative = String(relative);
     var done = Q.defer();
     try {
-        FS.symlink(relative, target, function (error) {
+        FS.symlink(relative, target, type || 'file', function (error) {
             if (error) {
                 error.message = "Can't create symbolicLink " + JSON.stringify(target) + " to relative location " + JSON.stringify(relative) + ": " + error.message;
                 done.reject(error);
