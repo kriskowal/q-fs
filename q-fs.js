@@ -223,6 +223,9 @@ exports.link = function (source, target) {
 };
 
 exports.symbolicLink = function (target, relative, type) {
+    if (!type) {
+        console.warn(new Error("For Windows compatibility, symbolicLink must be called with a type argument 'file', 'directory', or 'junction'"));
+    }
     target = String(target);
     relative = String(relative);
     var done = Q.defer();
