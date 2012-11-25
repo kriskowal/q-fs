@@ -1,7 +1,10 @@
 
 [![Build Status](https://secure.travis-ci.org/kriskowal/q-fs.png)](http://travis-ci.org/kriskowal/q-fs)
 
-File system API for Q when/defer-style promises
+File system API for Q promises with method signatures patterned after
+[CommonJS/Filesystem/A][], but returning promises and promise streams.
+
+[CommonJS/Fileystem/A]: http://wiki.commonjs.org/wiki/Filesystem/A
 
 Open options:
 
@@ -17,23 +20,26 @@ Functions:
 -   ``open(path, options)``
 -   ``read(path, options)``
 -   ``write(path, content, options)``
--   ``append(path, content, options)`` NOT TESTED
--   ``copy(source, target)`` NOT IMPLEMENTED
+-   ``append(path, content, options)``
+-   ``copy(source, target)``
+-   ``copyTree(source, target)``
 -   ``list(path)``
 -   ``listTree(path, guard_opt(path, stat)``)
 -   ``listDirectoryTree(path)``
 -   ``glob(pattern)`` NOT IMPLEMENTED
 -   ``match(pattern, file)`` NOT IMPLEMENTED
 -   ``makeDirectory(path)``
--   ``makeTree(path)`` NOT TESTED
--   ``remove(path)`` NOT TESTED
--   ``removeTree(path)`` NOT TESTED
--   ``link(source, taget)`` NOT TESTED (probably safe)
--   ``chown(path, uid, gid)`` NOT TESTED (probably safe)
--   ``chmod(path, mode)`` NOT TESTED (probably safe)
+-   ``makeTree(path)``
+-   ``remove(path)``
+-   ``removeTree(path)``
+-   ``link(source, taget)``
+-   ``symbolicCopy(source, target)``
+-   ``symbolicLink(target, relative, type)``
+-   ``chown(path, uid, gid)``
+-   ``chmod(path, mode)``
 -   ``stat(path)``
--   ``statLink(path)`` NOT TESTED
--   ``statFd(fd)`` NOT TESTED
+-   ``statLink(path)``
+-   ``statFd(fd)``
 -   ``exists(path)``
 -   ``isFile(path)``
 -   ``isDirectory(path)``

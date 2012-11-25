@@ -246,7 +246,7 @@ exports.symbolicLink = function (target, relative, type) {
 
 exports.symbolicCopy = function (source, target) {
     return Q.when(exports.relative(target, source), function (relative) {
-        return exports.symbolicLink(target, relative);
+        return exports.symbolicLink(target, relative, "file");
     });
 };
 
