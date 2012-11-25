@@ -75,7 +75,6 @@ exports.update = function (exports, workingDirectory) {
         });
     };
 
-    // TODO append
     exports.append = function (path, content, flags, charset, options) {
         var self = this;
         if (typeof flags == "object") {
@@ -93,10 +92,23 @@ exports.update = function (exports, workingDirectory) {
         });
     };
 
-    // TODO copy
+    exports.copy = function (source, target) {
+        var self = this;
+        return Q.spread([
+            self.open(source, {flags: "rb"}),
+            self.open(target, {flags: "wb"})
+        ], function (reader, writer) {
+            return Q.when(reader.forEach(function (block) {
+                return writer.write(block);
+            }), function () {
+                return Q.all([
+                    reader.close && reader.close(), // TODO fix q-io
+                    writer.close()
+                ]);
+            });
+        });
+    };
 
-    /**
-     */
     exports.listTree = function (basePath, guard) {
         var self = this;
         basePath = String(basePath || '');
