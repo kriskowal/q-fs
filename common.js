@@ -36,18 +36,12 @@ exports.update = function (exports, workingDirectory) {
         return Q.when(this.open(path, options), function (stream) {
             return stream.read();
         }, function (reason) {
-            var message = "Can't read " + path + ": " + reason.message;
-            return Q.reject({
-                "toString": function () {
-                    return JSON.stringify(this);
-                },
-                "message": message,
-                "path": path,
-                "flags": flags,
-                "charset": charset,
-                "cause": reason,
-                "stack": new Error(message).stack
-            });
+            var error = new Error("Can't read " + path + " because " + reason.message);
+            error.path = path;
+            error.flags = flags;
+            error.charset = charset;
+            error.cause = reason;
+            throw error;
         });
     };
 
@@ -388,6 +382,10 @@ exports.update = function (exports, workingDirectory) {
         });
     };
 
+    var Stats = exports.Stats = function (nodeStat) {
+        this.node = nodeStat;
+    };
+
     var stats = [
         "isDirectory",
         "isFile",
@@ -398,23 +396,19 @@ exports.update = function (exports, workingDirectory) {
         "isSocket"
     ];
 
-    var Stats = exports.Stats = function (copy) {
-        var self = Object.create(copy);
-        stats.forEach(function (name) {
-            if (copy["_" + name] !== undefined) {
-                self["_" + name] = copy["_" + name];
-            } else {
-                self["_" + name] = copy[name]();
-            }
-        });
-        return self;
-    };
-
     stats.forEach(function (name) {
         Stats.prototype[name] = function () {
-            return this["_" + name];
+            return this.node[name]();
         };
     });
+
+    Stats.prototype.lastModified = function () {
+        return Date.parse(this.node.mtime);
+    };
+
+    Stats.prototype.lastAccessed = function () {
+        return Date.parse(this.node.atime);
+    };
 
 }
 

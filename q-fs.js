@@ -288,12 +288,11 @@ exports.chmod = function (path, mode) {
 };
 
 exports.lastModified = function (path) {
-    var self = this;
-    var stat = self.stat(path);
-    var mtime = Q.get(stat, 'mtime');
-    return Q.when(mtime, function (mtime) {
-        return Date.parse(mtime);
-    });
+    return exports.stat(path).get('mtime').then(Date.parse);
+};
+
+exports.lastAccessed = function (path) {
+    return exports.stat(path).get('atime').then(Date.parse);
 };
 
 exports.canonical = function (path) {

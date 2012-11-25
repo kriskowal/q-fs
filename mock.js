@@ -83,7 +83,7 @@ var Fs = exports.Fs = function (files) {
         flags = flags || "r";
         var binary = flags.indexOf("b") >= 0;
         charset = charset || "utf-8";
-        if (flags.indexOf("r") >= 0) {
+        if (flags.indexOf("w") === -1) {
             return fs.stat(path).post("isFile")
             .then(function (isFile) {
                 if (!isFile) {
@@ -106,7 +106,7 @@ var Fs = exports.Fs = function (files) {
     fs.stat = function (path) {
         var stat = find(root, path);
         if (stat.get() === undefined)
-            return Q.reject("No such file: " + path);
+            return Q.reject(new Error("No such file: " + path));
         return Q.resolve(stat);
     };
 

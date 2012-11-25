@@ -26,8 +26,6 @@ Functions:
 -   ``list(path)``
 -   ``listTree(path, guard_opt(path, stat)``)
 -   ``listDirectoryTree(path)``
--   ``glob(pattern)`` NOT IMPLEMENTED
--   ``match(pattern, file)`` NOT IMPLEMENTED
 -   ``makeDirectory(path)``
 -   ``makeTree(path)``
 -   ``remove(path)``
@@ -66,6 +64,9 @@ Functions:
 -   ``reroot(path_opt)``
 -   ``toObject(path_opt)``
 
-Copyright 2009, 2010 Kristopher Michael Kowal
+-   ``glob(pattern)`` NOT IMPLEMENTED
+-   ``match(pattern, file)`` NOT IMPLEMENTED
+
+Copyright 2009–2012 Kristopher Michael Kowal
 MIT License (enclosed)
 

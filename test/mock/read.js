@@ -8,21 +8,23 @@ var ASSERT = require("assert");
 
 exports['test merge'] = function (ASSERT, done) {
 
-    var readed = FS.mock(FS, FS.join(__dirname, 'dummy'));
+    var mock = FS.mock(FS, FS.join(__dirname, 'dummy'));
 
-    Q.when(readed, function (readed) {
-        return Q.when(readed.listTree(), function (list) {
+    Q.when(mock, function (mock) {
+        return Q.when(mock.listTree(), function (list) {
             ASSERT.deepEqual(list.sort(), [
                 ".", "hello.txt"
-            ].sort(), 'listTree');
+            ].sort(), "listTree");
         }).then(function () {
-            return Q.when(readed.read("hello.txt"), function (hello) {
+            return Q.when(mock.read("hello.txt"), function (hello) {
                 ASSERT.strictEqual(hello, 'Hello, World!\n', 'read content');
             });
         });
     })
-    .fin(done)
-    .done()
+    .catch(function (error) {
+        ASSERT.ok(false, error);
+    })
+    .finally(done)
 
 };
 
