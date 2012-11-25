@@ -109,6 +109,28 @@ exports.update = function (exports, workingDirectory) {
         });
     };
 
+    exports.copyTree = function (source, target) {
+        var self = this;
+        return Q.when(exports.stat(source), function (stat) {
+            if (stat.isFile()) {
+                return exports.copy(source, target);
+            } else if (stat.isDirectory()) {
+                return Q.when(exports.makeDirectory(target), function () {
+                    return Q.when(exports.list(source), function (list) {
+                        return Q.all(list.map(function (child) {
+                            return exports.copyTree(
+                                exports.join(source, child),
+                                exports.join(target, child)
+                            );
+                        }));
+                    });
+                });
+            } else if (stat.isSymbolicLink()) {
+                return exports.symbolicCopy(source, target);
+            }
+        });
+    };
+
     exports.listTree = function (basePath, guard) {
         var self = this;
         basePath = String(basePath || '');
