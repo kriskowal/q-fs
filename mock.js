@@ -83,28 +83,31 @@ var Fs = exports.Fs = function (files) {
         flags = flags || "r";
         var binary = flags.indexOf("b") >= 0;
         charset = charset || "utf-8";
-        var stat = fs.stat(path);
-        var isFile = Q.post(stat, 'isFile');
-        return Q.when(isFile, function (isFile) {
-            if (!isFile) {
-                throw new Error("Can't open non-file " + path);
-            }
-            return {
-                "read": function () {
-                    var content = node.get();
-                    if (!binary)
-                        content = content.toString(charset);
-                    return content;
+        if (flags.indexOf("r") >= 0) {
+            return fs.stat(path).post("isFile")
+            .then(function (isFile) {
+                if (!isFile) {
+                    throw new Error("Can't open non-file " + path);
                 }
-            };
-        });
+                return {
+                    "read": function () {
+                        var content = node.get();
+                        if (!binary)
+                            content = content.toString(charset);
+                        return content;
+                    }
+                };
+            });
+        } else {
+            throw new Error("Can't open files for writing in read-only mock file system");
+        }
     };
 
     fs.stat = function (path) {
         var stat = find(root, path);
         if (stat.get() === undefined)
             return Q.reject("No such file: " + path);
-        return stat;
+        return Q.resolve(stat);
     };
 
     fs.getNode = function (path) {
